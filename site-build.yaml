@@ -12,5 +12,4 @@ pipeline:
         fail_on_reconcile_error: false
     - id: preview-home
       needs: [quality-home]
-      command: "preview /index"
-
+      command: "preview page /index"
