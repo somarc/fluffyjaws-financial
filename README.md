@@ -1,34 +1,27 @@
-# Your Project's Title...
-Your project's description...
+# FluffyJaws Financial
+
+Fictional Edge Delivery Services demo site for stress-testing `da-cli` intent-to-site workflows.
 
 ## Environments
-- Preview: https://main--{repo}--{owner}.aem.page/
-- Live: https://main--{repo}--{owner}.aem.live/
 
-## Documentation
+- Preview: https://main--fluffyjaws-financial--somarc.aem.page/
+- Live: https://main--fluffyjaws-financial--somarc.aem.live/
+- DA: https://da.live/#/somarc/fluffyjaws-financial
 
-Before using the aem-boilerplate, we recommand you to go through the documentation on https://www.aem.live/docs/ and more specifically:
-1. [Developer Tutorial](https://www.aem.live/developer/tutorial)
-2. [The Anatomy of a Project](https://www.aem.live/developer/anatomy-of-a-project)
-3. [Web Performance](https://www.aem.live/developer/keeping-it-100)
-4. [Markup, Sections, Blocks, and Auto Blocking](https://www.aem.live/developer/markup-sections-blocks)
-
-## Installation
+## Local Development
 
 ```sh
 npm i
+npx aem up
 ```
 
-## Linting
+## DA CLI Workflow
+
+Use the local feature-branch CLI from the sibling checkout:
 
 ```sh
-npm run lint
+node ../da-cli/bin/da.js --org somarc --repo fluffyjaws-financial content put /index content/index.html
+node ../da-cli/bin/da.js --org somarc --repo fluffyjaws-financial pipeline quality-gate /index --min-score 85
 ```
 
-## Local development
-
-1. Create a new repository based on the `aem-boilerplate` template
-1. Add the [AEM Code Sync GitHub App](https://github.com/apps/aem-code-sync) to the repository
-1. Install the [AEM CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/aem-cli`
-1. Start AEM Proxy: `aem up` (opens your browser at `http://localhost:3000`)
-1. Open the `{repo}` directory in your favorite IDE and start coding :)
+Content files under `content/` are source documents intended for DA upload. The `blocks/` directory contains the extra primitives needed for the full-gambit site exercise.

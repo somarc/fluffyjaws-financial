@@ -12,12 +12,14 @@
 
 :root {
   /* colors */
-  --background-color: white;
-  --light-color: #f8f8f8;
-  --dark-color: #505050;
-  --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
+  --background-color: #fffdf8;
+  --light-color: #eef4f8;
+  --dark-color: #13231f;
+  --text-color: #17201d;
+  --link-color: #1f6f58;
+  --link-hover-color: #164c3e;
+  --accent-color: #d89b2b;
+  --muted-color: #53616a;
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;
@@ -143,7 +145,26 @@ pre {
 }
 
 main > div {
-  margin: 40px 16px;
+  margin: 48px 16px;
+}
+
+main > .section.hero-container {
+  margin-top: 0;
+}
+
+main .section.highlight {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 48px 16px;
+  background: #f6fafb;
+}
+
+main .section.disclaimer {
+  border-top: 1px solid #d8dde8;
+  border-bottom: 1px solid #d8dde8;
+  padding: 24px 0;
+  color: var(--muted-color);
+  font-size: var(--body-font-size-s);
 }
 
 input,
@@ -199,9 +220,9 @@ button.button:disabled {
 
 a.button.primary,
 button.button.primary {
-  border-color: var(--text-color);
-  background-color: var(--text-color);
-  color: var(--background-color);
+  border-color: var(--dark-color);
+  background-color: var(--dark-color);
+  color: white;
 }
 
 a.button.primary:hover,
@@ -226,9 +247,9 @@ button.button.primary:disabled:focus-visible {
 
 a.button.secondary,
 button.button.secondary {
-  border-color: var(--text-color);
+  border-color: var(--dark-color);
   background-color: transparent;
-  color: var(--text-color);
+  color: var(--dark-color);
 }
 
 a.button.secondary:hover,
@@ -254,9 +275,9 @@ button.button.secondary:disabled:focus-visible {
 /* high-impact call-to-action */
 a.button.accent,
 button.button.accent {
-  border-color: var(--link-color);
-  background-color: var(--link-color);
-  color: var(--background-color);
+  border-color: var(--accent-color);
+  background-color: var(--accent-color);
+  color: #17201d;
 }
 
 a.button.accent:hover,
@@ -301,9 +322,13 @@ main > .section {
 }
 
 main > .section > div {
-  max-width: 1200px;
+  max-width: 1180px;
   margin: auto;
   padding: 0 24px;
+}
+
+main > .section.hero-container > div {
+  max-width: unset;
 }
 
 main > .section:first-of-type {

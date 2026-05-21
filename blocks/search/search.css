@@ -1,0 +1,27 @@
+.search {
+  display: grid;
+  gap: 16px;
+}
+
+.search input {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #aeb8c2;
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.search-results {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.search-results li {
+  border: 1px solid #d8dde8;
+  border-radius: 8px;
+  padding: 14px;
+}
+

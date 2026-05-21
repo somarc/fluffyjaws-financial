@@ -1,0 +1,36 @@
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.product-grid-card {
+  border: 1px solid #d8dde8;
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.product-grid-media {
+  background: #eef4f8;
+  line-height: 0;
+}
+
+.product-grid-media img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.product-grid-body {
+  padding: 20px;
+}
+
+.product-grid-body h3 {
+  margin-top: 0;
+}
+
+.product-grid-body ul {
+  padding-left: 20px;
+}
+

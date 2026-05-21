@@ -1,0 +1,16 @@
+pipeline:
+  name: "FluffyJaws Financial quality gate"
+  context:
+    org: somarc
+    repo: fluffyjaws-financial
+  steps:
+    - id: quality-home
+      command: "pipeline quality-gate /index --min-score 85"
+      reconcile:
+        command: "site reconcile --from-audit /index --out .da/reconcile-index.json"
+        max_attempts: 2
+        fail_on_reconcile_error: false
+    - id: preview-home
+      needs: [quality-home]
+      command: "preview /index"
+

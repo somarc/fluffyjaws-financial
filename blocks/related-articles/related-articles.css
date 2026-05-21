@@ -1,0 +1,18 @@
+.related-articles ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.related-articles li {
+  border-top: 4px solid #1f7a5a;
+  padding: 14px 0;
+}
+
+.related-articles a {
+  font-weight: 700;
+}
+

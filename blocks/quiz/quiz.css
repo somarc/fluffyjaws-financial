@@ -1,0 +1,32 @@
+.quiz {
+  display: grid;
+  gap: 18px;
+}
+
+.quiz-question {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  border: 1px solid #d8dde8;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.quiz legend {
+  padding: 0 4px;
+  font-weight: 700;
+}
+
+.quiz label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: var(--body-font-size-s);
+}
+
+.quiz-result {
+  min-height: 48px;
+  color: #1f4f45;
+  font-weight: 700;
+}
+

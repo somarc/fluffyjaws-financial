@@ -1,0 +1,26 @@
+.tabs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid #d8dde8;
+}
+
+.tabs-list button {
+  border: 0;
+  border-bottom: 3px solid transparent;
+  padding: 10px 14px;
+  background: transparent;
+  color: #35424b;
+  cursor: pointer;
+}
+
+.tabs-list button[aria-selected='true'] {
+  border-color: #1f7a5a;
+  color: #13231f;
+  font-weight: 700;
+}
+
+.tabs-panels {
+  padding: 20px 0 0;
+}
+
