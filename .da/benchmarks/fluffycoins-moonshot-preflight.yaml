@@ -1,0 +1,20 @@
+pipeline:
+  name: "FluffyCoins moonshot preflight benchmark"
+  context:
+    org: somarc
+    repo: fluffyjaws-financial
+  steps:
+    - id: local-quality
+      command: "pipeline quality-gate content/benchmarks/fluffycoins-moonshot.html --min-score 85 --format json"
+    - id: block-code-dry-run
+      command: "code sync blocks/price-chart/price-chart.js --format json"
+      depends_on: [local-quality]
+    - id: block-style-dry-run
+      command: "code sync blocks/price-chart/price-chart.css --format json"
+      depends_on: [local-quality]
+    - id: content-dry-run
+      command: "content put /benchmarks/fluffycoins-moonshot.html content/benchmarks/fluffycoins-moonshot.html --format json"
+      depends_on: [block-code-dry-run, block-style-dry-run]
+    - id: current-site-briefing
+      command: "site doctor --agent --deep --prefix /benchmarks --limit 25 --format json"
+      depends_on: [content-dry-run]

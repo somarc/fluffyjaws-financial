@@ -1,0 +1,68 @@
+.price-chart {
+  display: grid;
+  gap: 18px;
+  border: 1px solid #d8dde8;
+  border-radius: 8px;
+  padding: 24px;
+  background: #fff;
+}
+
+.price-chart-plot {
+  display: grid;
+  gap: 14px;
+}
+
+.price-chart-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.8fr) minmax(160px, 2fr) minmax(96px, 0.55fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.price-chart-label,
+.price-chart-value {
+  display: grid;
+  gap: 2px;
+}
+
+.price-chart-label span,
+.price-chart-value span,
+.price-chart-disclaimer {
+  color: var(--muted-color);
+  font-size: var(--body-font-size-xs);
+}
+
+.price-chart-track {
+  height: 18px;
+  border-radius: 999px;
+  background: #eef4f8;
+  overflow: hidden;
+}
+
+.price-chart-track span {
+  display: block;
+  width: var(--bar-size);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1f6f58, #d89b2b);
+}
+
+.price-chart-value {
+  text-align: right;
+}
+
+.price-chart-disclaimer {
+  margin: 0;
+  border-top: 1px solid #d8dde8;
+  padding-top: 14px;
+}
+
+@media (width < 700px) {
+  .price-chart-row {
+    grid-template-columns: 1fr;
+  }
+
+  .price-chart-value {
+    text-align: left;
+  }
+}
