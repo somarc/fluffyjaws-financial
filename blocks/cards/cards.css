@@ -27,3 +27,24 @@
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+
+.cards .cards-card-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.cards > ul > li:has(.cards-card-link) {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.cards > ul > li:has(.cards-card-link):hover {
+  box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
+  transform: translateY(-2px);
+}
+
+.cards .cards-card-link .cards-card-body {
+  flex: 1;
+}
