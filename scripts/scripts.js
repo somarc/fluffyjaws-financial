@@ -33,6 +33,40 @@ function buildHeroBlock(main) {
   }
 }
 
+function buildProductGridBlock(main) {
+  const heading = [...main.querySelectorAll('h2')]
+    .find((h2) => h2.textContent.trim().toLowerCase() === 'fictional products');
+  const section = heading?.parentElement;
+  if (!section || section.querySelector('.product-grid')) return;
+
+  const rows = [];
+  let node = heading.nextElementSibling;
+  while (node) {
+    const media = node.matches('p') ? node.querySelector('picture, img') : null;
+    const title = node.nextElementSibling;
+    const description = title?.nextElementSibling;
+    const details = description?.nextElementSibling;
+
+    if (!media || title?.tagName !== 'H3' || description?.tagName !== 'P' || details?.tagName !== 'UL') break;
+
+    const mediaCell = document.createElement('div');
+    mediaCell.append(media);
+
+    const bodyCell = document.createElement('div');
+    bodyCell.append(title, description, details);
+
+    rows.push([mediaCell, bodyCell]);
+
+    const next = node.nextElementSibling;
+    node.remove();
+    node = next;
+  }
+
+  if (rows.length) {
+    section.append(buildBlock('product-grid', rows));
+  }
+}
+
 /**
  * load fonts.css and set a session storage flag
  */
@@ -70,6 +104,7 @@ function buildAutoBlocks(main) {
     }
 
     buildHeroBlock(main);
+    buildProductGridBlock(main);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
