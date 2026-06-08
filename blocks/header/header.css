@@ -315,7 +315,7 @@ header nav .nav-search-results {
   overflow-y: auto;
 }
 
-header nav .nav-search-open .nav-search-results {
+header nav .nav-search-results:not([hidden]) {
   display: grid;
   gap: 4px;
 }
@@ -325,31 +325,15 @@ header nav .nav-search-results a {
   gap: 4px;
   border-radius: 6px;
   padding: 10px;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  line-height: 1.25;
   text-decoration: none;
 }
 
 header nav .nav-search-results a:hover,
 header nav .nav-search-results a:focus-visible {
   background: var(--light-color);
-}
-
-header nav .nav-search-results span {
-  font-size: var(--body-font-size-s);
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-header nav .nav-search-results small {
-  color: var(--muted-color);
-  font-size: var(--body-font-size-xs);
-  line-height: 1.35;
-}
-
-header nav .nav-search-message {
-  padding: 10px;
-  color: var(--muted-color);
-  font-size: var(--body-font-size-xs);
-  line-height: 1.35;
 }
 
 @media (width < 900px) {

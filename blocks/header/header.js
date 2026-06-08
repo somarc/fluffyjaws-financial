@@ -3,79 +3,23 @@ import { loadFragment } from '../fragment/fragment.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
-const SEARCH_INDEX_URL = '/query-index.json';
-const SEARCH_MIN_LENGTH = 2;
-const SEARCH_MAX_RESULTS = 6;
 
-let searchIndexPromise;
+const SEARCH_ITEMS = [
+  ['FluffyJaws Bonds', '/products/fluffyjaws-bonds'],
+  ['Bonds', '/products/fluffyjaws-bonds'],
+  ['FluffyJaws ETFs', '/products/fluffyjaws-etfs'],
+  ['ETFs', '/products/fluffyjaws-etfs'],
+  ['FluffyCoins', '/products/fluffycoins'],
+  ['FluffyJaws HypeRails', '/products/fluffyjaws-hyperrails'],
+  ['HypeRails', '/products/fluffyjaws-hyperrails'],
+  ['Risk Profiler', '/tools/risk-profiler'],
+  ['Portfolio Builder', '/tools/portfolio-builder'],
+  ['Compare', '/compare'],
+  ['Learn', '/learn'],
+  ['Contact', '/contact'],
+];
 
-function getNavSearchEntries(nav) {
-  return [...nav.querySelectorAll('.nav-sections a[href], .nav-tools a[href], .nav-brand a[href]')]
-    .map((link) => ({
-      title: link.textContent.trim(),
-      description: link.closest('.nav-drop')?.childNodes[0]?.textContent?.trim() || '',
-      path: new URL(link.href).pathname,
-    }))
-    .filter((entry, index, entries) => entry.title
-      && entries.findIndex((item) => item.path === entry.path) === index);
-}
-
-function loadSearchIndex() {
-  if (!searchIndexPromise) {
-    searchIndexPromise = fetch(SEARCH_INDEX_URL)
-      .then((resp) => (resp.ok ? resp.json() : { data: [] }))
-      .then((json) => json.data || [])
-      .catch(() => []);
-  }
-  return searchIndexPromise;
-}
-
-function scoreSearchResult(entry, query) {
-  const q = query.toLowerCase();
-  const title = (entry.title || '').toLowerCase();
-  const description = (entry.description || '').toLowerCase();
-  const content = (entry.content || '').toLowerCase();
-  let score = 0;
-
-  if (title.startsWith(q)) score += 70;
-  else if (title.includes(q)) score += 50;
-  if (description.includes(q)) score += 20;
-  if (content.includes(q)) score += 8;
-
-  return score;
-}
-
-function createSearchResult(entry) {
-  const item = document.createElement('li');
-  const link = document.createElement('a');
-  const title = document.createElement('span');
-  const description = document.createElement('small');
-
-  link.href = entry.path || '/';
-  title.textContent = entry.title || entry.path;
-  description.textContent = entry.description || entry.path || '';
-
-  link.append(title, description);
-  item.append(link);
-  return item;
-}
-
-function createSearchMessage(message) {
-  const item = document.createElement('li');
-  item.className = 'nav-search-message';
-  item.textContent = message;
-  return item;
-}
-
-function mergeSearchEntries(...entrySets) {
-  return entrySets
-    .flat()
-    .filter((entry, index, entries) => entry.path
-      && entries.findIndex((item) => item.path === entry.path) === index);
-}
-
-function buildNavSearch(nav) {
-  const navEntries = getNavSearchEntries(nav);
+function buildNavSearch() {
   const search = document.createElement('form');
   search.className = 'nav-search';
   search.setAttribute('role', 'search');
@@ -89,51 +33,41 @@ function buildNavSearch(nav) {
 
   const results = document.createElement('ul');
   results.className = 'nav-search-results';
+  results.hidden = true;
 
   search.append(input, results);
 
-  function closeResults() {
-    search.classList.remove('nav-search-open');
-    results.replaceChildren();
-  }
-
-  let debounce;
-  input.addEventListener('input', () => {
-    clearTimeout(debounce);
-    debounce = setTimeout(async () => {
-      const query = input.value.trim();
-      if (query.length < SEARCH_MIN_LENGTH) {
-        closeResults();
-        return;
-      }
-
-      const queryEntries = await loadSearchIndex();
-      const matches = mergeSearchEntries(queryEntries, navEntries)
-        .map((entry) => ({ entry, score: scoreSearchResult(entry, query) }))
-        .filter((match) => match.score > 0)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, SEARCH_MAX_RESULTS)
-        .map((match) => match.entry);
-
-      if (matches.length) {
-        results.replaceChildren(...matches.map(createSearchResult));
-      } else {
-        results.replaceChildren(createSearchMessage('No matching pages'));
-      }
-      search.classList.add('nav-search-open');
-    }, 120);
-  });
-
-  input.addEventListener('focus', loadSearchIndex);
-  search.addEventListener('submit', (event) => {
-    const firstResult = results.querySelector('a');
-    if (firstResult) {
-      event.preventDefault();
-      window.location.assign(firstResult.href);
+  const render = () => {
+    const query = input.value.trim().toLowerCase();
+    if (!query) {
+      results.hidden = true;
+      results.replaceChildren();
+      return;
     }
+
+    const matches = SEARCH_ITEMS
+      .filter(([title]) => title.toLowerCase().includes(query))
+      .slice(0, 6);
+    results.replaceChildren(...matches.map(([title, href]) => {
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = href;
+      link.textContent = title;
+      item.append(link);
+      return item;
+    }));
+    results.hidden = matches.length === 0;
+  };
+
+  search.addEventListener('input', render);
+  search.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const first = results.querySelector('a');
+    if (first) window.location.href = first.href;
+    else if (input.value.trim()) window.location.href = `/learn?q=${encodeURIComponent(input.value.trim())}`;
   });
-  document.addEventListener('click', (event) => {
-    if (!search.contains(event.target)) closeResults();
+  search.addEventListener('focusout', () => {
+    window.setTimeout(() => { results.hidden = true; }, 150);
   });
 
   return search;
@@ -288,7 +222,7 @@ export default async function decorate(block) {
   }
 
   const navTools = nav.querySelector('.nav-tools');
-  if (navTools) navTools.prepend(buildNavSearch(nav));
+  if (navTools) navTools.prepend(buildNavSearch());
 
   // hamburger for mobile
   const hamburger = document.createElement('div');
