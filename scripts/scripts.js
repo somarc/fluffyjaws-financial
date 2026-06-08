@@ -67,6 +67,27 @@ function buildProductGridBlock(main) {
   }
 }
 
+function removeMetadataBlocks(main) {
+  main.querySelectorAll('table').forEach((table) => {
+    const firstCell = table.querySelector('tr:first-child td:first-child');
+    if (firstCell?.textContent.trim().toLowerCase() !== 'metadata') return;
+
+    const parent = table.parentElement;
+    if (parent?.children.length === 1 && !parent.textContent.replace(table.textContent, '').trim()) {
+      parent.remove();
+    } else {
+      table.remove();
+    }
+  });
+
+  main.querySelectorAll(':scope > div').forEach((section) => {
+    const values = [...section.children].map((child) => child.textContent.trim().toLowerCase());
+    if (values[0] === 'title' && values.includes('description')) {
+      section.remove();
+    }
+  });
+}
+
 /**
  * load fonts.css and set a session storage flag
  */
@@ -105,6 +126,7 @@ function buildAutoBlocks(main) {
 
     buildHeroBlock(main);
     buildProductGridBlock(main);
+    removeMetadataBlocks(main);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
