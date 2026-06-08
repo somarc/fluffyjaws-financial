@@ -3,6 +3,104 @@ import { loadFragment } from '../fragment/fragment.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
+const SEARCH_INDEX_URL = '/query-index.json';
+const SEARCH_MIN_LENGTH = 2;
+const SEARCH_MAX_RESULTS = 6;
+
+let searchIndexPromise;
+
+function loadSearchIndex() {
+  if (!searchIndexPromise) {
+    searchIndexPromise = fetch(SEARCH_INDEX_URL)
+      .then((resp) => (resp.ok ? resp.json() : { data: [] }))
+      .then((json) => json.data || [])
+      .catch(() => []);
+  }
+  return searchIndexPromise;
+}
+
+function scoreSearchResult(entry, query) {
+  const q = query.toLowerCase();
+  const title = (entry.title || '').toLowerCase();
+  const description = (entry.description || '').toLowerCase();
+  const content = (entry.content || '').toLowerCase();
+  let score = 0;
+
+  if (title.startsWith(q)) score += 70;
+  else if (title.includes(q)) score += 50;
+  if (description.includes(q)) score += 20;
+  if (content.includes(q)) score += 8;
+
+  return score;
+}
+
+function createSearchResult(entry) {
+  const item = document.createElement('li');
+  const link = document.createElement('a');
+  link.href = entry.path || '/';
+  link.innerHTML = `<span>${entry.title || entry.path}</span><small>${entry.description || entry.path || ''}</small>`;
+  item.append(link);
+  return item;
+}
+
+function buildNavSearch() {
+  const search = document.createElement('form');
+  search.className = 'nav-search';
+  search.setAttribute('role', 'search');
+
+  const input = document.createElement('input');
+  input.type = 'search';
+  input.placeholder = 'Search';
+  input.autocomplete = 'off';
+  input.spellcheck = false;
+  input.setAttribute('aria-label', 'Search FluffyJaws Financial');
+
+  const results = document.createElement('ul');
+  results.className = 'nav-search-results';
+
+  search.append(input, results);
+
+  function closeResults() {
+    search.classList.remove('nav-search-open');
+    results.replaceChildren();
+  }
+
+  let debounce;
+  input.addEventListener('input', () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(async () => {
+      const query = input.value.trim();
+      if (query.length < SEARCH_MIN_LENGTH) {
+        closeResults();
+        return;
+      }
+
+      const matches = (await loadSearchIndex())
+        .map((entry) => ({ entry, score: scoreSearchResult(entry, query) }))
+        .filter((match) => match.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, SEARCH_MAX_RESULTS)
+        .map((match) => match.entry);
+
+      results.replaceChildren(...matches.map(createSearchResult));
+      search.classList.toggle('nav-search-open', matches.length > 0);
+    }, 120);
+  });
+
+  input.addEventListener('focus', loadSearchIndex);
+  search.addEventListener('submit', (event) => {
+    const firstResult = results.querySelector('a');
+    if (firstResult) {
+      event.preventDefault();
+      window.location.assign(firstResult.href);
+    }
+  });
+  document.addEventListener('click', (event) => {
+    if (!search.contains(event.target)) closeResults();
+  });
+
+  return search;
+}
 
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
@@ -151,6 +249,9 @@ export default async function decorate(block) {
       });
     });
   }
+
+  const navTools = nav.querySelector('.nav-tools');
+  if (navTools) navTools.prepend(buildNavSearch());
 
   // hamburger for mobile
   const hamburger = document.createElement('div');
