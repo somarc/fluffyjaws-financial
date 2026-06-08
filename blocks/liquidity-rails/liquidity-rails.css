@@ -1,0 +1,71 @@
+.liquidity-rails {
+  margin: 32px 0;
+}
+
+.liquidity-rails-shell {
+  border: 1px solid #d8dde8;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #f6fafb 0%, #fffdf8 100%);
+}
+
+.liquidity-rails-mast {
+  padding: 28px;
+  border-bottom: 1px solid #d8dde8;
+}
+
+.liquidity-rails-mast h2 {
+  margin: 0;
+}
+
+.liquidity-rails-mast p {
+  max-width: 760px;
+  color: var(--muted-color);
+}
+
+.liquidity-rails-track {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.liquidity-rail {
+  position: relative;
+  min-height: 220px;
+  padding: 28px;
+  border-right: 1px solid #d8dde8;
+  border-bottom: 1px solid #d8dde8;
+}
+
+.liquidity-rail::before {
+  content: var(--rail-index);
+  display: block;
+  margin-bottom: 28px;
+  color: var(--accent-color);
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-l);
+  line-height: 1;
+}
+
+.liquidity-rail-label {
+  margin: 0 0 12px;
+  color: var(--link-color);
+  font-size: var(--body-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.liquidity-rail h3 {
+  margin-top: 0;
+}
+
+.liquidity-rail p:last-child {
+  margin-bottom: 0;
+}
+
+@media (width < 700px) {
+  .liquidity-rails-mast,
+  .liquidity-rail {
+    padding: 22px;
+  }
+}
