@@ -18,15 +18,17 @@ import {
  */
 function buildHeroBlock(main) {
   const h1 = main.querySelector('h1');
-  const picture = main.querySelector('picture');
+  const media = [...main.querySelectorAll('picture, a[href$=".json"]')]
+    // eslint-disable-next-line no-bitwise
+    .filter((item) => h1 && (h1.compareDocumentPosition(item) & Node.DOCUMENT_POSITION_PRECEDING));
   // eslint-disable-next-line no-bitwise
-  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
-    // Check if h1 or picture is already inside a hero block
-    if (h1.closest('.hero') || picture.closest('.hero')) {
+  if (h1 && media.length) {
+    // Check if h1 or media is already inside a hero block
+    if (h1.closest('.hero') || media.some((item) => item.closest('.hero'))) {
       return; // Don't create a duplicate hero block
     }
     const section = document.createElement('div');
-    section.append(buildBlock('hero', { elems: [picture, h1] }));
+    section.append(buildBlock('hero', { elems: [...media, h1] }));
     main.prepend(section);
   }
 }
