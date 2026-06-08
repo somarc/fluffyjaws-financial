@@ -1,0 +1,108 @@
+.entropy-lab {
+  margin: 32px 0;
+}
+
+.entropy-lab-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(280px, 1.1fr);
+  gap: 28px;
+  padding: 28px;
+  border: 1px solid #c9d7d7;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgb(240 249 247 / 90%), rgb(255 255 255 / 94%)),
+    #f6fbfa;
+}
+
+.entropy-lab-intro h2 {
+  margin: 0 0 12px;
+  font-size: var(--heading-font-size-l);
+}
+
+.entropy-lab-intro p {
+  margin: 0;
+}
+
+.entropy-lab-kicker {
+  color: #12645f;
+  font-size: var(--body-font-size-s);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.entropy-lab-formula {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid #111827;
+  border-radius: 8px;
+  background: #0b1117;
+  color: #f7fafc;
+  grid-column: 1 / -1;
+}
+
+.entropy-lab-formula span {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2rem, 4vw, 4rem);
+}
+
+.entropy-lab-formula strong {
+  color: #5eead4;
+  font-size: var(--body-font-size-m);
+}
+
+.entropy-lab-meters {
+  display: grid;
+  gap: 14px;
+}
+
+.entropy-lab-meter {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(120px, 2fr) minmax(80px, auto);
+  align-items: center;
+  gap: 12px;
+}
+
+.entropy-lab-meter span {
+  font-weight: 700;
+}
+
+.entropy-lab-meter div {
+  height: 12px;
+  border-radius: 999px;
+  background: #dbe7e6;
+  overflow: hidden;
+}
+
+.entropy-lab-meter i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #0f766e;
+}
+
+.entropy-lab-meter strong {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.entropy-lab-average {
+  align-self: end;
+  margin: 0;
+  padding: 18px;
+  border-left: 4px solid #0f766e;
+  background: rgb(255 255 255 / 78%);
+}
+
+@media (width < 800px) {
+  .entropy-lab-shell,
+  .entropy-lab-meter {
+    grid-template-columns: 1fr;
+  }
+
+  .entropy-lab-meter strong {
+    text-align: left;
+  }
+}
