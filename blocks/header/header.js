@@ -9,6 +9,17 @@ const SEARCH_MAX_RESULTS = 6;
 
 let searchIndexPromise;
 
+function getNavSearchEntries(nav) {
+  return [...nav.querySelectorAll('.nav-sections a[href], .nav-tools a[href], .nav-brand a[href]')]
+    .map((link) => ({
+      title: link.textContent.trim(),
+      description: link.closest('.nav-drop')?.childNodes[0]?.textContent?.trim() || '',
+      path: new URL(link.href).pathname,
+    }))
+    .filter((entry, index, entries) => entry.title
+      && entries.findIndex((item) => item.path === entry.path) === index);
+}
+
 function loadSearchIndex() {
   if (!searchIndexPromise) {
     searchIndexPromise = fetch(SEARCH_INDEX_URL)
@@ -37,13 +48,34 @@ function scoreSearchResult(entry, query) {
 function createSearchResult(entry) {
   const item = document.createElement('li');
   const link = document.createElement('a');
+  const title = document.createElement('span');
+  const description = document.createElement('small');
+
   link.href = entry.path || '/';
-  link.innerHTML = `<span>${entry.title || entry.path}</span><small>${entry.description || entry.path || ''}</small>`;
+  title.textContent = entry.title || entry.path;
+  description.textContent = entry.description || entry.path || '';
+
+  link.append(title, description);
   item.append(link);
   return item;
 }
 
-function buildNavSearch() {
+function createSearchMessage(message) {
+  const item = document.createElement('li');
+  item.className = 'nav-search-message';
+  item.textContent = message;
+  return item;
+}
+
+function mergeSearchEntries(...entrySets) {
+  return entrySets
+    .flat()
+    .filter((entry, index, entries) => entry.path
+      && entries.findIndex((item) => item.path === entry.path) === index);
+}
+
+function buildNavSearch(nav) {
+  const navEntries = getNavSearchEntries(nav);
   const search = document.createElement('form');
   search.className = 'nav-search';
   search.setAttribute('role', 'search');
@@ -75,15 +107,20 @@ function buildNavSearch() {
         return;
       }
 
-      const matches = (await loadSearchIndex())
+      const queryEntries = await loadSearchIndex();
+      const matches = mergeSearchEntries(queryEntries, navEntries)
         .map((entry) => ({ entry, score: scoreSearchResult(entry, query) }))
         .filter((match) => match.score > 0)
         .sort((a, b) => b.score - a.score)
         .slice(0, SEARCH_MAX_RESULTS)
         .map((match) => match.entry);
 
-      results.replaceChildren(...matches.map(createSearchResult));
-      search.classList.toggle('nav-search-open', matches.length > 0);
+      if (matches.length) {
+        results.replaceChildren(...matches.map(createSearchResult));
+      } else {
+        results.replaceChildren(createSearchMessage('No matching pages'));
+      }
+      search.classList.add('nav-search-open');
     }, 120);
   });
 
@@ -251,7 +288,7 @@ export default async function decorate(block) {
   }
 
   const navTools = nav.querySelector('.nav-tools');
-  if (navTools) navTools.prepend(buildNavSearch());
+  if (navTools) navTools.prepend(buildNavSearch(nav));
 
   // hamburger for mobile
   const hamburger = document.createElement('div');
