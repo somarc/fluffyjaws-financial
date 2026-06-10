@@ -2,7 +2,7 @@
 header .nav-wrapper {
   background-color: var(--background-color);
   width: 100%;
-  z-index: 2;
+  z-index: 20;
   position: fixed;
 }
 
@@ -33,6 +33,7 @@ header nav[aria-expanded='true'] {
 @media (width >= 900px) {
   header .nav-wrapper {
     position: relative;
+    overflow: visible;
   }
 
   header nav {
@@ -41,6 +42,7 @@ header nav[aria-expanded='true'] {
     gap: 0 32px;
     max-width: 1264px;
     padding: 0 32px;
+    overflow: visible;
   }
 
   header nav[aria-expanded='true'] {
@@ -189,6 +191,8 @@ header nav .nav-sections ul > li > ul > li {
   header nav .nav-sections {
     display: block;
     visibility: visible;
+    position: relative;
+    z-index: 3;
     white-space: nowrap;
   }
 
@@ -241,6 +245,7 @@ header nav .nav-sections ul > li > ul > li {
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
     display: block;
     position: absolute;
+    z-index: 30;
     left: -24px;
     width: 200px;
     top: calc(100% + 14px);
