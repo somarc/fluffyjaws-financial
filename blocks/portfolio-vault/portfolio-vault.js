@@ -6,7 +6,7 @@ const ASSETS = [
     risk: 18,
     return: 4.8,
     liquidity: 62,
-    color: '#28a46a',
+    color: '#35d5ff',
     note: 'Stable ladder, lower volatility, steady fictional yield.',
   },
   {
@@ -16,7 +16,7 @@ const ASSETS = [
     risk: 45,
     return: 7.2,
     liquidity: 78,
-    color: '#2f80ed',
+    color: '#12f4cf',
     note: 'Diversified basket with moderate risk and high liquidity.',
   },
   {
@@ -26,7 +26,7 @@ const ASSETS = [
     risk: 86,
     return: 12.5,
     liquidity: 39,
-    color: '#f06b4f',
+    color: '#ff4fe8',
     note: 'High-volatility fiction with dramatic upside and downside.',
   },
 ];
@@ -147,7 +147,7 @@ function decorateFallback(block, state, onUpdate) {
     <p data-scene-copy></p>
     <dl>
       <div><dt>Weighted risk</dt><dd data-summary-risk></dd></div>
-      <div><dt>Projected return</dt><dd data-summary-return></dd></div>
+      <div><dt>Return signal</dt><dd data-summary-return></dd></div>
       <div><dt>Liquidity</dt><dd data-summary-liquidity></dd></div>
     </dl>
   `;
@@ -164,10 +164,16 @@ function decorateFallback(block, state, onUpdate) {
 async function loadThreeScene(canvas, state) {
   const {
     AmbientLight,
-    BoxGeometry,
+    BufferGeometry,
     Color,
+    CylinderGeometry,
     DirectionalLight,
+    EdgesGeometry,
+    Float32BufferAttribute,
     Group,
+    Line,
+    LineBasicMaterial,
+    LineSegments,
     Mesh,
     MeshStandardMaterial,
     PerspectiveCamera,
@@ -178,10 +184,10 @@ async function loadThreeScene(canvas, state) {
   } = await import(THREE_MODULE_URL);
 
   const scene = new Scene();
-  scene.background = new Color('#07110f');
-  const camera = new PerspectiveCamera(42, 1, 0.1, 100);
-  camera.position.set(4.8, 4.1, 7);
-  camera.lookAt(0, 0.25, 0);
+  scene.background = new Color('#050a18');
+  const camera = new PerspectiveCamera(40, 1, 0.1, 100);
+  camera.position.set(4.6, 3.2, 6.4);
+  camera.lookAt(0, 0.4, 0);
 
   const renderer = new WebGLRenderer({
     canvas,
@@ -191,52 +197,104 @@ async function loadThreeScene(canvas, state) {
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
 
-  scene.add(new AmbientLight('#cde9df', 1.35));
-  const keyLight = new DirectionalLight('#ffffff', 2.4);
+  scene.add(new AmbientLight('#8fdcff', 1.1));
+  const keyLight = new DirectionalLight('#ffffff', 2.2);
   keyLight.position.set(3, 5, 4);
   scene.add(keyLight);
+  const rimLight = new DirectionalLight('#ff5ff4', 1.6);
+  rimLight.position.set(-4, 2, -3);
+  scene.add(rimLight);
 
   const vault = new Group();
   scene.add(vault);
 
   const base = new Mesh(
-    new TorusGeometry(2.5, 0.045, 12, 96),
+    new TorusGeometry(2.35, 0.026, 8, 120),
     new MeshStandardMaterial({
-      color: '#96e6c2',
-      emissive: '#123f30',
+      color: '#3ad6ff',
+      emissive: '#0e7ee8',
+      emissiveIntensity: 0.7,
       metalness: 0.15,
-      roughness: 0.35,
+      roughness: 0.22,
     }),
   );
   base.rotation.x = Math.PI / 2;
   vault.add(base);
 
-  const assetMeshes = state.assets.map((asset, index) => {
-    const x = (index - 1) * 1.35;
-    const pillar = new Mesh(
-      new BoxGeometry(0.68, 1, 0.68),
-      new MeshStandardMaterial({ color: asset.color, roughness: 0.42, metalness: 0.22 }),
+  const gridGroup = new Group();
+  const gridMaterial = new LineBasicMaterial({ color: '#1e74ff', transparent: true, opacity: 0.22 });
+  for (let index = -7; index <= 7; index += 1) {
+    const horizontal = new BufferGeometry();
+    horizontal.setAttribute(
+      'position',
+      new Float32BufferAttribute([-5.8, -0.95, index * 0.56, 5.8, -0.95, index * 0.56], 3),
     );
-    pillar.position.x = x;
-    vault.add(pillar);
+    gridGroup.add(new Line(horizontal, gridMaterial));
+
+    const vertical = new BufferGeometry();
+    vertical.setAttribute(
+      'position',
+      new Float32BufferAttribute([index * 0.56, -0.95, -4, index * 0.56, -0.95, 4], 3),
+    );
+    gridGroup.add(new Line(vertical, gridMaterial));
+  }
+  scene.add(gridGroup);
+
+  const assetMeshes = state.assets.map((asset, index) => {
+    const segment = new Mesh(
+      new CylinderGeometry(2.05 - (index * 0.08), 2.05 - (index * 0.08), 0.42, 56, 1, false),
+      new MeshStandardMaterial({
+        color: asset.color,
+        emissive: asset.color,
+        emissiveIntensity: 0.18,
+        metalness: 0.28,
+        roughness: 0.2,
+        transparent: true,
+        opacity: 0.68,
+      }),
+    );
+    segment.rotation.x = Math.PI / 2;
+    segment.position.y = -0.1 + (index * 0.08);
+    vault.add(segment);
+
+    const wireframe = new LineSegments(
+      new EdgesGeometry(segment.geometry),
+      new LineBasicMaterial({
+        color: asset.color,
+        transparent: true,
+        opacity: 0.72,
+      }),
+    );
+    wireframe.rotation.copy(segment.rotation);
+    wireframe.position.copy(segment.position);
+    vault.add(wireframe);
 
     const marker = new Mesh(
       new SphereGeometry(0.17, 24, 16),
       new MeshStandardMaterial({
         color: asset.color,
         emissive: asset.color,
-        emissiveIntensity: 0.22,
+        emissiveIntensity: 0.65,
       }),
     );
-    marker.position.set(x, 1.7, 0);
+    marker.position.set(0, 0.35, 0);
     vault.add(marker);
-    return { asset, pillar, marker };
+    return {
+      asset,
+      segment,
+      wireframe,
+      marker,
+    };
   });
 
-  const particles = Array.from({ length: 34 }, (_, index) => {
+  const particles = Array.from({ length: 46 }, (_, index) => {
     const particle = new Mesh(
       new SphereGeometry(0.035 + ((index % 4) * 0.008), 12, 8),
-      new MeshStandardMaterial({ color: index % 3 === 0 ? '#f06b4f' : '#9ee7c7', emissive: '#173c32' }),
+      new MeshStandardMaterial({
+        color: index % 3 === 0 ? '#ff4fe8' : '#3ad6ff',
+        emissive: index % 3 === 0 ? '#ff4fe8' : '#13f1ff',
+        emissiveIntensity: 0.75,
+      }),
     );
     vault.add(particle);
     return particle;
@@ -251,37 +309,51 @@ async function loadThreeScene(canvas, state) {
   }
 
   function updateObjects(time = 0) {
-    const modeLift = {
-      builder: 0,
-      globe: 0.7,
-      growth: 1.1,
-      risk: 0.25,
+    const modeSpread = {
+      builder: 0.18,
+      globe: 0.42,
+      growth: 0.28,
+      risk: 0.62,
     }[state.mode];
+    let startAngle = -Math.PI * 0.5;
 
-    assetMeshes.forEach(({ asset, pillar, marker }, index) => {
-      const height = 0.45 + (asset.allocation / 100) * 3.5;
-      pillar.scale.y += (height - pillar.scale.y) * 0.08;
-      pillar.position.y = pillar.scale.y / 2 - 1.15;
+    assetMeshes.forEach(({
+      asset,
+      segment,
+      wireframe,
+      marker,
+    }, index) => {
+      const share = Math.max(0.04, asset.allocation / 100);
+      const arc = share * Math.PI * 2;
+      const centerAngle = startAngle + (arc / 2);
+      const thickness = 0.2 + share * 1.35;
+      const targetY = -0.18 + (asset.risk / 100) * 0.72;
+      segment.scale.set(share, 1, thickness);
+      wireframe.scale.copy(segment.scale);
+      segment.position.y += (targetY - segment.position.y) * 0.08;
+      wireframe.position.copy(segment.position);
+      segment.rotation.z = centerAngle;
+      wireframe.rotation.z = centerAngle;
       const orbit = time * (0.0004 + (asset.risk / 180000)) + index * 2.1;
-      marker.position.x = pillar.position.x + Math.cos(orbit) * modeLift;
-      marker.position.y = pillar.position.y
-        + pillar.scale.y
-        + 0.38
-        + Math.sin(orbit * 1.7) * 0.14;
-      marker.position.z = Math.sin(orbit) * modeLift;
+      const radius = 1.2 + modeSpread + (asset.return / 16);
+      marker.position.x = Math.cos(centerAngle + orbit * 0.2) * radius;
+      marker.position.y = segment.position.y + 0.48 + Math.sin(orbit * 1.7) * 0.12;
+      marker.position.z = Math.sin(centerAngle + orbit * 0.2) * radius;
+      startAngle += arc + 0.03;
     });
 
     particles.forEach((particle, index) => {
       const angle = time * (0.00018 + (index % 5) * 0.000035) + index;
-      const radius = 1.45 + (index % 7) * 0.18;
+      const radius = 1.75 + (index % 7) * 0.2;
       particle.position.set(
         Math.cos(angle) * radius,
-        -0.35 + Math.sin(angle * 1.4) * 0.42,
+        -0.25 + Math.sin(angle * 1.4) * 0.48,
         Math.sin(angle) * radius,
       );
     });
 
-    vault.rotation.y = time * (state.mode === 'risk' ? 0.00022 : 0.00014);
+    gridGroup.rotation.y = time * 0.00004;
+    vault.rotation.y = time * (state.mode === 'risk' ? 0.0002 : 0.00012);
     vault.rotation.x = Math.sin(time * 0.00018) * 0.06;
   }
 
@@ -302,11 +374,15 @@ async function loadThreeScene(canvas, state) {
       renderer.dispose();
       [
         base,
-        ...assetMeshes.flatMap(({ pillar, marker }) => [pillar, marker]),
+        ...assetMeshes.flatMap(({ segment, wireframe, marker }) => [segment, wireframe, marker]),
         ...particles,
       ].forEach((mesh) => {
         mesh.geometry.dispose();
         mesh.material.dispose();
+      });
+      gridGroup.children.forEach((line) => {
+        line.geometry.dispose();
+        line.material.dispose();
       });
     },
   };
