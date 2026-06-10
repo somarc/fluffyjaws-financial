@@ -181,6 +181,7 @@ async function loadThreeScene(canvas, state) {
   scene.background = new Color('#07110f');
   const camera = new PerspectiveCamera(42, 1, 0.1, 100);
   camera.position.set(4.8, 4.1, 7);
+  camera.lookAt(0, 0.25, 0);
 
   const renderer = new WebGLRenderer({
     canvas,
