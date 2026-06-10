@@ -1,0 +1,206 @@
+.portfolio-vault {
+  color: #f4fbf7;
+}
+
+.portfolio-vault-shell {
+  display: grid;
+  gap: 18px;
+  border: 1px solid #203b33;
+  border-radius: 8px;
+  padding: 16px;
+  background: #07110f;
+  box-shadow: 0 24px 70px rgb(7 17 15 / 18%);
+}
+
+.portfolio-vault-stage {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 50% 42%, rgb(43 194 126 / 24%), transparent 28%),
+    linear-gradient(145deg, #07110f 0%, #112721 58%, #182621 100%);
+}
+
+.portfolio-vault-canvas,
+.portfolio-vault-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.portfolio-vault-canvas {
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.portfolio-vault-fallback {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 28px;
+  padding: 54px 24px;
+  transition: opacity 180ms ease;
+}
+
+.portfolio-vault-enhanced .portfolio-vault-canvas {
+  opacity: 1;
+}
+
+.portfolio-vault-enhanced .portfolio-vault-fallback {
+  opacity: 0;
+}
+
+.portfolio-vault-fallback::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 42px;
+  width: min(72%, 520px);
+  height: 54px;
+  border: 2px solid rgb(157 231 199 / 70%);
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.portfolio-vault-pillar {
+  position: relative;
+  z-index: 1;
+  width: clamp(52px, 13vw, 88px);
+  height: max(78px, calc(var(--height) * 2.7));
+  border-radius: 8px 8px 3px 3px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--asset-color), white 18%), var(--asset-color));
+  box-shadow: 0 0 30px color-mix(in srgb, var(--asset-color), transparent 45%);
+  transition: height 180ms ease;
+}
+
+.portfolio-vault-panel {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 4px;
+}
+
+.portfolio-vault-panel .eyebrow {
+  margin: 0;
+  color: #9ee7c7;
+  font-size: var(--body-font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.portfolio-vault-panel h2,
+.portfolio-vault-panel p {
+  margin: 0;
+}
+
+.portfolio-vault-panel h2 {
+  color: #fff;
+}
+
+.portfolio-vault-panel > p:not(.eyebrow) {
+  color: #c9d8d2;
+}
+
+.portfolio-vault-panel dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0 0;
+}
+
+.portfolio-vault-panel dl div {
+  min-width: 0;
+  border: 1px solid #24453b;
+  border-radius: 8px;
+  padding: 12px;
+  background: rgb(255 255 255 / 5%);
+}
+
+.portfolio-vault-panel dt {
+  color: #9bacb4;
+  font-size: var(--body-font-size-xs);
+}
+
+.portfolio-vault-panel dd {
+  margin: 4px 0 0;
+  color: #fff;
+  font-size: var(--heading-font-size-m);
+  font-weight: 700;
+}
+
+.portfolio-vault-controls {
+  display: grid;
+  gap: 16px;
+}
+
+.portfolio-vault-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.portfolio-vault-modes button {
+  min-height: 38px;
+  border: 1px solid #2d5147;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #f4fbf7;
+  background: #10231f;
+  font: inherit;
+  cursor: pointer;
+}
+
+.portfolio-vault-modes button[aria-pressed='true'] {
+  border-color: #9ee7c7;
+  color: #07110f;
+  background: #9ee7c7;
+}
+
+.portfolio-vault-allocations {
+  display: grid;
+  gap: 12px;
+}
+
+.portfolio-vault-allocations label {
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) minmax(120px, 2fr) 52px;
+  gap: 12px;
+  align-items: center;
+  color: #dfece8;
+  font-size: var(--body-font-size-s);
+}
+
+.portfolio-vault-allocations input {
+  width: 100%;
+  accent-color: #55c790;
+}
+
+.portfolio-vault-allocations output {
+  text-align: right;
+  font-weight: 700;
+}
+
+@media (width >= 900px) {
+  .portfolio-vault-shell {
+    grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.75fr);
+    padding: 20px;
+  }
+
+  .portfolio-vault-stage {
+    grid-row: span 2;
+    min-height: 540px;
+  }
+}
+
+@media (width < 700px) {
+  .portfolio-vault-panel dl,
+  .portfolio-vault-allocations label {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-vault-allocations output {
+    text-align: left;
+  }
+}
