@@ -563,12 +563,12 @@
     <header class="topbar">
       <div class="brand"><span class="paw">🐾</span><span>FLUFFYJAWS</span></div>
       <nav class="nav" aria-label="Trading navigation">
-        <span>Buy Crypto</span>
-        <span>Markets</span>
-        <span>Trade⌄</span>
-        <span>Futures⌄</span>
-        <span>Earn⌄</span>
-        <span>CatSquare⌄</span>
+        <span>Buy Products</span>
+        <span>Product Desk</span>
+        <span>Trade Products⌄</span>
+        <span>Bundles⌄</span>
+        <span>Rewards⌄</span>
+        <span>Community⌄</span>
         <span>More⌄</span>
       </nav>
       <input class="search" type="search" placeholder="Search">
@@ -581,20 +581,20 @@
 
     <section class="market-strip" aria-label="Market summary">
       <div class="pair">
-        <h1>FJAW/USDT</h1>
+        <h1>FLUFFBOND/CREDIT</h1>
         <div>
           <div class="last-price" id="lastPrice">1,234.56</div>
-          <small>FluffyJaws Token Price</small>
+          <small>FluffyJaws Bond Unit Price</small>
         </div>
       </div>
       <div class="stats">
         <span>24h Chg <strong class="negative" id="chg">-0.82%</strong></span>
         <span>24h High <strong id="high">1,252.90</strong></span>
         <span>24h Low <strong id="low">1,198.20</strong></span>
-        <span>24h Vol(FJAW) <strong id="vol">8.74M</strong></span>
+        <span>24h Vol(Units) <strong id="vol">8.74M</strong></span>
         <span>Regime <strong><span class="regime-chip" id="regime">Chop</span></strong></span>
-        <span>Networks <strong>CatChain · PawNet</strong></span>
-        <span>Tags <strong style="color: var(--gold)">Layer 1 / MeowFi / Hot</strong></span>
+        <span>Networks <strong>Product Desk · Vault</strong></span>
+        <span>Tags <strong style="color: var(--gold)">Bonds / ETFs / FluffyCoins</strong></span>
       </div>
     </section>
 
@@ -605,12 +605,12 @@
           <span style="color: var(--muted)">⋯</span>
         </div>
         <div>
-          <div class="book-labels"><span>Price (USDT)</span><span>Amount (FJAW)</span><span>Total</span></div>
+          <div class="book-labels"><span>Unit Price (Credits)</span><span>Units</span><span>Total</span></div>
           <div class="book-grid" id="asks"></div>
         </div>
         <div class="book-price">
           <span id="bookPrice">1,234.56</span>
-          <small>≈ $1,234.56</small>
+          <small>≈ 1,234.56 demo credits</small>
         </div>
         <div>
           <div class="book-grid" id="bids"></div>
@@ -640,8 +640,8 @@
           <span>MA(99) <b style="color: #a78bfa">2,836.10</b></span>
         </div>
         <div class="chart-wrap">
-          <div class="watermark">FJAW</div>
-          <canvas id="chart" aria-label="FJAW price chart"></canvas>
+          <div class="watermark">PRODUCT</div>
+          <canvas id="chart" aria-label="FluffyJaws product price chart"></canvas>
           <div class="tooltip" id="tooltip"></div>
         </div>
       </section>
@@ -649,46 +649,46 @@
       <aside class="right-stack">
         <section class="panel">
           <div class="panel-head">
-            <span>Markets</span>
-            <span style="color: var(--muted)">USDT ▾</span>
+            <span>Product Desk</span>
+            <span style="color: var(--muted)">CREDIT ▾</span>
           </div>
           <div class="book-labels"><span>Name</span><span>Last Price</span><span>24h Chg</span></div>
           <div class="watch-list" id="watch"></div>
         </section>
         <section class="panel">
           <div class="panel-head">
-            <div class="tabs"><button class="active" type="button">Market Trades</button><button type="button">My Trades</button></div>
+            <div class="tabs"><button class="active" type="button">Product Trades</button><button type="button">My Listings</button></div>
             <span style="color: var(--muted)">⋯</span>
           </div>
-          <div class="book-labels"><span>Price</span><span>Amount</span><span>Time</span></div>
+          <div class="book-labels"><span>Unit</span><span>Units</span><span>Time</span></div>
           <div class="trades-list" id="trades"></div>
         </section>
       </aside>
 
-      <section class="panel ticket" aria-label="Trade ticket">
+      <section class="panel ticket" aria-label="Product ticket">
         <div class="panel-head">
           <div class="tabs">
-            <button class="active" type="button">Spot</button>
-            <button type="button">Cross</button>
-            <button type="button">Isolated</button>
-            <button type="button">Grid</button>
+            <button class="active" type="button">Catalog</button>
+            <button type="button">Margin</button>
+            <button type="button">Reserve</button>
+            <button type="button">Auto-list</button>
           </div>
-          <span style="color: var(--muted)">Available: 15,420.12 USDT</span>
+          <span style="color: var(--muted)">Available: 15,420.12 demo credits</span>
         </div>
         <div class="ticket-body">
           <form class="side" id="buyForm">
-            <div class="tabs"><button class="active" type="button">Limit</button><button type="button">Market</button><button type="button">Stop Limit</button></div>
-            <label class="field"><span>Price</span><input id="buyPrice" inputmode="decimal" value="1234.56"><b>USDT</b></label>
-            <label class="field"><span>Amount</span><input id="buyAmount" inputmode="decimal" value="1.2500"><b>FJAW</b></label>
-            <label class="field"><span>Total</span><input id="buyTotal" inputmode="decimal" value="1543.20"><b>USDT</b></label>
-            <button class="buy" type="button">Buy FJAW</button>
+            <div class="tabs"><button class="active" type="button">Fixed</button><button type="button">Instant</button><button type="button">Trigger</button></div>
+            <label class="field"><span>Unit</span><input id="buyPrice" inputmode="decimal" value="1234.56"><b>CR</b></label>
+            <label class="field"><span>Units</span><input id="buyAmount" inputmode="decimal" value="1.2500"><b>PRODUCT</b></label>
+            <label class="field"><span>Total</span><input id="buyTotal" inputmode="decimal" value="1543.20"><b>CR</b></label>
+            <button class="buy" type="button">Buy Product</button>
           </form>
           <form class="side" id="sellForm">
-            <div class="tabs"><button class="active" type="button">Limit</button><button type="button">Market</button><button type="button">Stop Limit</button></div>
-            <label class="field"><span>Price</span><input id="sellPrice" inputmode="decimal" value="1234.56"><b>USDT</b></label>
-            <label class="field"><span>Amount</span><input id="sellAmount" inputmode="decimal" value="1.2500"><b>FJAW</b></label>
-            <label class="field"><span>Total</span><input id="sellTotal" inputmode="decimal" value="1543.20"><b>USDT</b></label>
-            <button class="sell" type="button">Sell FJAW</button>
+            <div class="tabs"><button class="active" type="button">Fixed</button><button type="button">Instant</button><button type="button">Trigger</button></div>
+            <label class="field"><span>Unit</span><input id="sellPrice" inputmode="decimal" value="1234.56"><b>CR</b></label>
+            <label class="field"><span>Units</span><input id="sellAmount" inputmode="decimal" value="1.2500"><b>PRODUCT</b></label>
+            <label class="field"><span>Total</span><input id="sellTotal" inputmode="decimal" value="1543.20"><b>CR</b></label>
+            <button class="sell" type="button">List Product</button>
           </form>
         </div>
       </section>
@@ -696,9 +696,9 @@
 
     <footer class="statusbar">
       <span class="positive">▮ Stable connection</span>
-      <span>CAT/USDT <b class="positive">+3.12%</b></span>
-      <span>DOGE/USDT <b class="negative">-2.36%</b></span>
-      <span>MEOW/USDT <b class="positive">+8.44%</b></span>
+      <span>FLUFFBOND/CR <b class="positive">+3.12%</b></span>
+      <span>ETF-KIT/CR <b class="negative">-2.36%</b></span>
+      <span>COINBOX/CR <b class="positive">+8.44%</b></span>
       <span style="margin-left:auto">Announcements</span>
       <span>Cookie Preference</span>
       <span>Online Support</span>
@@ -864,7 +864,7 @@
         tooltip.style.display = 'block';
         tooltip.style.left = `${Math.min(width - 210, state.hover.x + 16)}px`;
         tooltip.style.top = `${Math.max(12, state.hover.y - 70)}px`;
-        tooltip.innerHTML = `Open <b>${fmt(candle.open)}</b><br>High <b>${fmt(candle.high)}</b><br>Low <b>${fmt(candle.low)}</b><br>Close <b>${fmt(candle.close)}</b><br>Volume <b>${fmt(candle.volume, 0)}</b>`;
+        tooltip.innerHTML = `Open <b>${fmt(candle.open)}</b><br>High <b>${fmt(candle.high)}</b><br>Low <b>${fmt(candle.low)}</b><br>Close <b>${fmt(candle.close)}</b><br>Units <b>${fmt(candle.volume, 0)}</b>`;
       }
     }
 
@@ -906,16 +906,16 @@
 
     function renderWatch() {
       const pairs = [
-        ['CAT/USDT', 0.275, -6.46],
-        ['1000PAW/USDT', 0.00146, -2.01],
-        ['MEOW/USDT', 0.000525, 5.23],
-        ['PURR/USDT', 0.0926, -1.07],
-        ['FISH/USDT', 0.0691, 1.57],
-        ['YARN/USDT', 0.00324, -2.2],
-        ['NAP/USDT', 61.34, 1.62],
-        ['MILK/USDT', 0.005, -3.47],
-        ['CLAW/USDT', 0.0096, -1.84],
-        ['ACX/USDT', 0.04034, -3.72],
+        ['FLUFFBOND/CR', 0.275, -6.46],
+        ['BOND-LADDER/CR', 0.00146, -2.01],
+        ['COINBOX/CR', 0.000525, 5.23],
+        ['ETF-BASKET/CR', 0.0926, -1.07],
+        ['HYPERAILS/CR', 0.0691, 1.57],
+        ['RISK-KIT/CR', 0.00324, -2.2],
+        ['YIELD-STEP/CR', 61.34, 1.62],
+        ['MOONSHOT/CR', 0.005, -3.47],
+        ['DISCLOSURE/CR', 0.0096, -1.84],
+        ['VAULTPASS/CR', 0.04034, -3.72],
       ];
       const watch = document.getElementById('watch');
       watch.replaceChildren(...pairs.map(([name, price, change]) => {
