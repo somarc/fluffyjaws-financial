@@ -370,6 +370,7 @@
     }
 
     .ticket {
+      position: relative;
       display: grid;
       grid-template-rows: 46px minmax(0, 1fr);
     }
@@ -379,6 +380,47 @@
       grid-template-columns: 1fr 1fr;
       gap: 16px;
       padding: 16px;
+    }
+
+    .ticket.read-only .ticket-body {
+      filter: blur(3px) saturate(.72);
+      opacity: .58;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .ticket-readonly {
+      position: absolute;
+      inset: 46px 0 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      pointer-events: none;
+    }
+
+    .ticket-readonly-card {
+      max-width: 420px;
+      border: 1px solid rgb(31 122 90 / 22%);
+      border-radius: 8px;
+      padding: 14px 16px;
+      color: var(--deep);
+      background: rgb(255 253 248 / 86%);
+      box-shadow: 0 18px 48px rgb(19 35 31 / 16%);
+      text-align: center;
+      backdrop-filter: blur(12px);
+    }
+
+    .ticket-readonly-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--green);
+      font-size: 15px;
+    }
+
+    .ticket-readonly-card span {
+      color: var(--muted);
+      font-size: 12px;
     }
 
     .form-side {
@@ -542,25 +584,31 @@
         </section>
       </aside>
 
-      <section class="panel ticket" aria-label="Product ticket">
+      <section class="panel ticket read-only" aria-label="Product ticket">
         <div class="panel-head">
           <span>Product Ticket</span>
-          <span style="color: var(--muted)">Available: $15,420.12 demo cash</span>
+          <span style="color: var(--muted)">Read-only market preview</span>
+        </div>
+        <div class="ticket-readonly" aria-hidden="true">
+          <div class="ticket-readonly-card">
+            <strong>Read-only product desk</strong>
+            <span>Buy and list controls are intentionally locked until account access exists.</span>
+          </div>
         </div>
         <div class="ticket-body">
-          <form class="form-side" id="buyForm">
-            <div class="tabs"><button class="active" type="button">Fixed</button><button type="button">Instant</button><button type="button">Trigger</button></div>
-            <label class="field"><span>Price</span><input id="buyPrice" inputmode="decimal" value="1234.56"><b>USD</b></label>
-            <label class="field"><span>Units</span><input id="buyAmount" inputmode="decimal" value="1.2500"><b>Units</b></label>
-            <label class="field"><span>Total</span><input id="buyTotal" inputmode="decimal" value="1543.20"><b>USD</b></label>
-            <button class="buy" type="button">Buy Product</button>
+          <form class="form-side" id="buyForm" inert aria-hidden="true">
+            <div class="tabs"><button class="active" type="button" disabled>Fixed</button><button type="button" disabled>Instant</button><button type="button" disabled>Trigger</button></div>
+            <label class="field"><span>Price</span><input id="buyPrice" inputmode="decimal" value="1234.56" disabled><b>USD</b></label>
+            <label class="field"><span>Units</span><input id="buyAmount" inputmode="decimal" value="1.2500" disabled><b>Units</b></label>
+            <label class="field"><span>Total</span><input id="buyTotal" inputmode="decimal" value="1543.20" disabled><b>USD</b></label>
+            <button class="buy" type="button" disabled>Buy Product</button>
           </form>
-          <form class="form-side" id="sellForm">
-            <div class="tabs"><button class="active" type="button">Fixed</button><button type="button">Instant</button><button type="button">Trigger</button></div>
-            <label class="field"><span>Price</span><input id="sellPrice" inputmode="decimal" value="1234.56"><b>USD</b></label>
-            <label class="field"><span>Units</span><input id="sellAmount" inputmode="decimal" value="1.2500"><b>Units</b></label>
-            <label class="field"><span>Total</span><input id="sellTotal" inputmode="decimal" value="1543.20"><b>USD</b></label>
-            <button class="sell" type="button">List Product</button>
+          <form class="form-side" id="sellForm" inert aria-hidden="true">
+            <div class="tabs"><button class="active" type="button" disabled>Fixed</button><button type="button" disabled>Instant</button><button type="button" disabled>Trigger</button></div>
+            <label class="field"><span>Price</span><input id="sellPrice" inputmode="decimal" value="1234.56" disabled><b>USD</b></label>
+            <label class="field"><span>Units</span><input id="sellAmount" inputmode="decimal" value="1.2500" disabled><b>Units</b></label>
+            <label class="field"><span>Total</span><input id="sellTotal" inputmode="decimal" value="1543.20" disabled><b>USD</b></label>
+            <button class="sell" type="button" disabled>List Product</button>
           </form>
         </div>
       </section>
