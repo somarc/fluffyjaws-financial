@@ -636,6 +636,7 @@
         low: 1198.2,
         volatility: 4.8,
         drift: 0.48,
+        startTrend: 0.085,
       },
       etfs: {
         label: 'FluffyJaws ETFs',
@@ -648,6 +649,7 @@
         low: 276.8,
         volatility: 2.4,
         drift: 0.47,
+        startTrend: 0.11,
       },
       coins: {
         label: 'FluffyCoins',
@@ -660,6 +662,7 @@
         low: 32.4,
         volatility: 1.8,
         drift: 0.43,
+        startTrend: 0.18,
       },
     };
 
@@ -684,15 +687,20 @@
 
     function generateCandles(count = 64, base = state.price) {
       const candles = [];
-      let last = base;
+      const trend = state.product.startTrend || 0.08;
+      const start = base * (1 - trend);
+      let last = start;
       for (let i = 0; i < count; i += 1) {
+        const progress = i / Math.max(1, count - 1);
+        const target = start + ((base - start) * progress);
+        const wave = Math.sin(progress * Math.PI * 3) * state.product.volatility * 1.1;
+        const noise = (Math.random() - .42) * state.product.volatility * 1.4;
         const open = last;
-        const lateRun = i > count * 0.72 && Math.random() > 0.86 ? Math.random() * state.product.volatility * 5 : 0;
-        const drift = ((Math.random() - state.product.drift) * state.product.volatility * 4.6) + lateRun;
-        const close = Math.max(1, open + drift);
-        const high = Math.max(open, close) + Math.random() * state.product.volatility * 4;
-        const low = Math.max(.1, Math.min(open, close) - Math.random() * state.product.volatility * 4);
-        const volume = 900 + Math.random() * 5200;
+        const close = i === count - 1 ? base : Math.max(.5, target + wave + noise);
+        const wick = state.product.volatility * (.45 + Math.random() * .9);
+        const high = Math.max(open, close) + wick;
+        const low = Math.max(.1, Math.min(open, close) - wick * (.65 + Math.random() * .45));
+        const volume = 1200 + (progress * 4200) + Math.random() * 1800;
         candles.push({ open, high, low, close, volume });
         last = close;
       }
