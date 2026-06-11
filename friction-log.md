@@ -9,3 +9,10 @@
 - Bulk upload scripting exposed an operator footgun: in `zsh`, assigning to a variable named `path` mutates the shell `PATH`, which caused `node` to disappear mid-loop. da-cli should provide first-class content tree upload/pipeline execution so site generation does not depend on fragile shell loops.
 - Preview is nested (`preview page /index`) while the pipeline examples are easy to write as `preview /index`. da-cli could either accept the shorthand or make generated pipeline templates use the subcommand explicitly.
 - Browser validation caught issues that DA audit and quality-gate missed: JS console failures from fragment preview gaps, a brittle header brand assumption, and metadata tables becoming visible block load errors. The pipeline gate needs an optional browser-console phase after preview.
+
+## 2026-06-10 Codebus Sync Semantics
+
+- For an externally hosted EDS codebase with the AEM sync GitHub app connected, commit + push is the canonical code deployment path. The GitHub app observes the pushed commit and moves code assets through codebus; authors should not need a separate DA CLI deploy step for ordinary code changes.
+- `da code sync` still has real operational value, but it should be treated as a reconciliation and recovery primitive, not the happy-path deploy command. It is useful when a live or preview asset is stale after a push, when proving a single codebus path during an audit, when recovering from a missed webhook/sync delay, or when forcing a specific file to align with the current GitHub source.
+- `da code status` and `da code verify` are the safer first checks. Use them to compare public preview/live assets with expected content before reaching for `da code sync`.
+- DA-authored content remains separate from codebus. Content changes still require DA preview/publish, while code changes should normally flow from GitHub push through the AEM sync app.
