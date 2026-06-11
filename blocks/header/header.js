@@ -64,7 +64,7 @@ function buildNavSearch() {
     event.preventDefault();
     const first = results.querySelector('a');
     if (first) window.location.href = first.href;
-    else if (input.value.trim()) window.location.href = `/learn?q=${encodeURIComponent(input.value.trim())}`;
+    else if (input.value.trim()) window.location.href = `/search?q=${encodeURIComponent(input.value.trim())}`;
   });
   search.addEventListener('focusout', () => {
     window.setTimeout(() => { results.hidden = true; }, 150);
