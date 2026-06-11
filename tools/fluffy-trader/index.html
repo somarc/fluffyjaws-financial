@@ -684,6 +684,9 @@
       regime: { type: 'chop', ticksLeft: 0, intensity: 1 },
     };
 
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const TICK_INTERVAL = 6000;
+
     const fmt = (value, digits = 2) => Number(value).toLocaleString('en-US', {
       minimumFractionDigits: digits,
       maximumFractionDigits: digits,
@@ -975,9 +978,10 @@
     }
 
     function syncTicker() {
-      if (document.visibilityState === 'visible' && !state.tickTimer) {
-        state.tickTimer = window.setInterval(tick, 2400);
-      } else if (document.visibilityState !== 'visible' && state.tickTimer) {
+      const shouldRun = document.visibilityState === 'visible' && !reducedMotion.matches;
+      if (shouldRun && !state.tickTimer) {
+        state.tickTimer = window.setInterval(tick, TICK_INTERVAL);
+      } else if (!shouldRun && state.tickTimer) {
         window.clearInterval(state.tickTimer);
         state.tickTimer = null;
       }
@@ -1007,6 +1011,7 @@
       });
       window.addEventListener('resize', scheduleChartDraw);
       document.addEventListener('visibilitychange', syncTicker);
+      reducedMotion.addEventListener('change', syncTicker);
       syncTicker();
     }
 
