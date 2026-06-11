@@ -52,8 +52,27 @@ function decorateLottieHero(block, path, link) {
     });
 }
 
+/**
+ * Fades the CSS scroll-down cue out once the user scrolls past the hero.
+ * Passive, rAF-throttled. No layout thrash.
+ */
+function initScrollCueFade(block) {
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      block.classList.toggle('is-scrolled-past', window.scrollY > block.offsetHeight * 0.35);
+      ticking = false;
+    });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
 export default function decorate(block) {
   const lottieLink = block.querySelector('a[href$=".json"]');
   const lottiePath = lottieLink?.href || DEFAULT_HERO_LOTTIE;
   decorateLottieHero(block, lottiePath, lottieLink);
+  initScrollCueFade(block);
 }

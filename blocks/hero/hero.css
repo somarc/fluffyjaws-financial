@@ -75,3 +75,51 @@
     padding: 96px 32px;
   }
 }
+
+/* --- Scroll-down cue --------------------------------------------------- */
+/* Signals there is content below a tall hero. Pure CSS, no JS required. */
+.hero::before {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 22px;
+  width: 26px;
+  height: 42px;
+  transform: translateX(-50%);
+  border: 2px solid rgb(255 255 255 / 70%);
+  border-radius: 16px;
+  pointer-events: none;
+  /* the "wheel" dot */
+  background:
+    radial-gradient(circle at 50% 22%,
+      var(--accent-color, #d89b2b) 0 3px,
+      transparent 4px) no-repeat;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 35%);
+  opacity: 0.9;
+  animation: hero-scroll-wheel 1.8s ease-in-out infinite;
+  transition: opacity 0.4s ease;
+}
+
+@keyframes hero-scroll-wheel {
+  0%   { background-position: 50% 22%; opacity: 0.95; }
+  50%  { background-position: 50% 58%; opacity: 0.45; }
+  100% { background-position: 50% 22%; opacity: 0.95; }
+}
+
+/* Fade the cue out once the user has scrolled past the hero */
+.hero.is-scrolled-past::before {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before {
+    animation: none;
+    background-position: 50% 30%;
+  }
+}
+
+/* On short viewports the cue can crowd the H1 — nudge it tighter */
+@media (height <= 560px) {
+  .hero::before { bottom: 12px; }
+}
