@@ -358,19 +358,36 @@ async function loadThreeScene(canvas, state) {
   }
 
   let frame;
+  let destroyed = false;
   function render(time) {
     resize();
     updateObjects(time);
     renderer.render(scene, camera);
-    frame = requestAnimationFrame(render);
+    if (document.visibilityState === 'visible' && !destroyed) {
+      frame = requestAnimationFrame(render);
+    } else {
+      frame = null;
+    }
   }
 
-  render(0);
+  function syncRenderLoop() {
+    if (document.visibilityState === 'visible' && !frame && !destroyed) {
+      frame = requestAnimationFrame(render);
+    } else if (document.visibilityState !== 'visible' && frame) {
+      cancelAnimationFrame(frame);
+      frame = null;
+    }
+  }
+
+  document.addEventListener('visibilitychange', syncRenderLoop);
+  syncRenderLoop();
 
   return {
     update: updateObjects,
     destroy() {
-      cancelAnimationFrame(frame);
+      destroyed = true;
+      document.removeEventListener('visibilitychange', syncRenderLoop);
+      if (frame) cancelAnimationFrame(frame);
       renderer.dispose();
       [
         base,

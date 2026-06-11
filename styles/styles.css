@@ -191,6 +191,22 @@ p.button-wrapper {
   margin: 12px 0;
 }
 
+p.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
 a.button:any-link,
 button.button {
   box-sizing: border-box;

@@ -144,7 +144,12 @@ function decorateButtons(main) {
     const text = a.textContent.trim();
 
     // quick structural checks
-    if (a.querySelector('img') || p.textContent.trim() !== text) return;
+    if (a.querySelector('img')) return;
+
+    const paragraphLinks = [...p.querySelectorAll(':scope > a[href], :scope > strong > a[href], :scope > em > a[href], :scope > strong > em > a[href], :scope > em > strong > a[href]')];
+    const paragraphText = paragraphLinks.map((link) => link.textContent.trim()).join(' ');
+    const supportsButtonGroup = paragraphLinks.length > 1 && p.textContent.trim() === paragraphText;
+    if (!supportsButtonGroup && p.textContent.trim() !== text) return;
 
     // skip URL display links
     try {
@@ -156,7 +161,7 @@ function decorateButtons(main) {
     const em = a.closest('em');
     if (!strong && !em) return;
 
-    p.className = 'button-wrapper';
+    p.className = supportsButtonGroup ? 'button-wrapper button-group' : 'button-wrapper';
     a.className = 'button';
     if (strong && em) { // high-impact call-to-action
       a.classList.add('accent');
