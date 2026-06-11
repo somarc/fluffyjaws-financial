@@ -510,6 +510,22 @@
       font-weight: 900;
     }
 
+    .regime-chip {
+      border: 1px solid rgb(14 203 129 / 32%);
+      border-radius: 999px;
+      padding: 3px 9px;
+      color: var(--green);
+      background: rgb(14 203 129 / 10%);
+      font-weight: 800;
+      transition: color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    }
+
+    .regime-chip.bull {
+      color: #11161d;
+      background: linear-gradient(90deg, var(--green), #80ffd2);
+      box-shadow: 0 0 22px rgb(14 203 129 / 36%);
+    }
+
     @media (max-width: 1120px) {
       body {
         overflow: auto;
@@ -576,6 +592,7 @@
         <span>24h High <strong id="high">1,252.90</strong></span>
         <span>24h Low <strong id="low">1,198.20</strong></span>
         <span>24h Vol(FJAW) <strong id="vol">8.74M</strong></span>
+        <span>Regime <strong><span class="regime-chip" id="regime">Chop</span></strong></span>
         <span>Networks <strong>CatChain · PawNet</strong></span>
         <span>Tags <strong style="color: var(--gold)">Layer 1 / MeowFi / Hot</strong></span>
       </div>
@@ -695,6 +712,16 @@
       trades: [],
       frame: '1H',
       hover: null,
+      tickCount: 0,
+      open24h: 1244.78,
+      high24h: 1252.9,
+      low24h: 1198.2,
+      volume24h: 8740000,
+      regime: {
+        type: 'chop',
+        ticksLeft: 0,
+        intensity: 1,
+      },
     };
 
     const fmt = (value, digits = 2) => Number(value).toLocaleString('en-US', {
@@ -707,7 +734,8 @@
       let last = base;
       for (let i = 0; i < count; i += 1) {
         const open = last;
-        const drift = (Math.random() - 0.48) * 22;
+        const bullBias = i > count * 0.72 && Math.random() > 0.82 ? Math.random() * 24 : 0;
+        const drift = ((Math.random() - 0.48) * 22) + bullBias;
         const close = Math.max(720, open + drift);
         const high = Math.max(open, close) + Math.random() * 26;
         const low = Math.min(open, close) - Math.random() * 26;
@@ -716,6 +744,30 @@
         last = close;
       }
       return candles;
+    }
+
+    function setRegime(type, ticksLeft = 0, intensity = 1) {
+      state.regime = { type, ticksLeft, intensity };
+      const chip = document.getElementById('regime');
+      chip.textContent = type === 'bull' ? 'Bull run' : 'Chop';
+      chip.classList.toggle('bull', type === 'bull');
+    }
+
+    function maybeStartBullRun() {
+      if (state.regime.type === 'bull') return;
+      if (Math.random() < 0.075) {
+        setRegime('bull', 10 + Math.floor(Math.random() * 12), 1 + Math.random() * 1.8);
+      }
+    }
+
+    function updateMarketStats() {
+      const change = ((state.price - state.open24h) / state.open24h) * 100;
+      const changeEl = document.getElementById('chg');
+      changeEl.textContent = `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
+      changeEl.className = change >= 0 ? 'positive' : 'negative';
+      document.getElementById('high').textContent = fmt(state.high24h, 2);
+      document.getElementById('low').textContent = fmt(state.low24h, 2);
+      document.getElementById('vol').textContent = `${(state.volume24h / 1000000).toFixed(2)}M`;
     }
 
     function movingAverage(candles, span) {
@@ -875,9 +927,9 @@
     }
 
     function appendTrade() {
-      const side = Math.random() > 0.48 ? 'buy' : 'sell';
-      const price = state.price + (Math.random() - 0.5) * 3.2;
-      const amount = Math.random() * 5.4;
+      const side = state.regime.type === 'bull' ? (Math.random() > 0.18 ? 'buy' : 'sell') : (Math.random() > 0.48 ? 'buy' : 'sell');
+      const price = state.price + (Math.random() - 0.5) * (state.regime.type === 'bull' ? 7.2 : 3.2);
+      const amount = Math.random() * (state.regime.type === 'bull' ? 12.5 : 5.4);
       const time = new Date().toLocaleTimeString('en-US', { hour12: false });
       state.trades.unshift({ side, price, amount, time });
       state.trades = state.trades.slice(0, 22);
@@ -891,15 +943,40 @@
     }
 
     function tick() {
+      maybeStartBullRun();
       const old = state.price;
-      state.price = Math.max(850, state.price + (Math.random() - 0.48) * 4.8);
+      const isBull = state.regime.type === 'bull';
+      const noise = (Math.random() - (isBull ? 0.18 : 0.48)) * (isBull ? 8.5 : 4.8);
+      const impulse = isBull ? (2.4 + Math.random() * 5.8) * state.regime.intensity : 0;
+      state.price = Math.max(850, state.price + noise + impulse);
+      state.tickCount += 1;
+      state.high24h = Math.max(state.high24h, state.price);
+      state.low24h = Math.min(state.low24h, state.price);
+      state.volume24h += (isBull ? 46000 : 14000) + Math.random() * (isBull ? 90000 : 26000);
       const last = document.getElementById('lastPrice');
       last.textContent = fmt(state.price, 2);
       last.classList.remove('up', 'down');
       last.classList.add(state.price >= old ? 'up' : 'down');
-      state.candles[state.candles.length - 1].close = state.price;
-      state.candles[state.candles.length - 1].high = Math.max(state.candles[state.candles.length - 1].high, state.price);
-      state.candles[state.candles.length - 1].low = Math.min(state.candles[state.candles.length - 1].low, state.price);
+      const current = state.candles[state.candles.length - 1];
+      current.close = state.price;
+      current.high = Math.max(current.high, state.price);
+      current.low = Math.min(current.low, state.price);
+      current.volume += isBull ? 4800 + Math.random() * 9000 : 800 + Math.random() * 1800;
+      if (state.tickCount % 3 === 0) {
+        state.candles.push({
+          open: state.price,
+          high: state.price + Math.random() * (isBull ? 10 : 4),
+          low: state.price - Math.random() * (isBull ? 4 : 8),
+          close: state.price,
+          volume: isBull ? 5200 + Math.random() * 12000 : 900 + Math.random() * 5200,
+        });
+        state.candles = state.candles.slice(-120);
+      }
+      if (isBull) {
+        state.regime.ticksLeft -= 1;
+        if (state.regime.ticksLeft <= 0) setRegime('chop');
+      }
+      updateMarketStats();
       renderBook();
       appendTrade();
       drawChart();
