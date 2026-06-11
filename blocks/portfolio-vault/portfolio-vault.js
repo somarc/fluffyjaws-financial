@@ -50,7 +50,7 @@ const SCENES = {
   },
 };
 
-const THREE_MODULE_URL = 'https://unpkg.com/three@0.165.0/build/three.module.js';
+const THREE_MODULE_URL = '/scripts/vendor/three-0.165.0.module.js';
 
 function makeElement(tag, className, text) {
   const element = document.createElement(tag);

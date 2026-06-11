@@ -602,6 +602,7 @@ async function loadFooter(footer) {
  */
 async function waitForFirstImage(section) {
   const lcpCandidate = section.querySelector('img');
+  if (lcpCandidate) lcpCandidate.setAttribute('fetchpriority', 'high');
   await new Promise((resolve) => {
     if (lcpCandidate && !lcpCandidate.complete) {
       lcpCandidate.setAttribute('loading', 'eager');

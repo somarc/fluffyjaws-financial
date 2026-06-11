@@ -1,4 +1,4 @@
-const LOTTIE_WEB_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js';
+const LOTTIE_WEB_SRC = '/scripts/vendor/lottie-web-5.12.2.min.js';
 const DEFAULT_HERO_LOTTIE = '/media/fluffyjaws-financial-hero.lottie.json';
 const HERO_LOTTIE_SPEED = 0.4;
 
