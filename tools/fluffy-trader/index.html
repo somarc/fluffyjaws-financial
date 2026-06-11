@@ -679,6 +679,7 @@
       trades: [],
       hover: null,
       tickCount: 0,
+      tickTimer: null,
       drawQueued: false,
       regime: { type: 'chop', ticksLeft: 0, intensity: 1 },
     };
@@ -973,6 +974,15 @@
       scheduleChartDraw();
     }
 
+    function syncTicker() {
+      if (document.visibilityState === 'visible' && !state.tickTimer) {
+        state.tickTimer = window.setInterval(tick, 2400);
+      } else if (document.visibilityState !== 'visible' && state.tickTimer) {
+        window.clearInterval(state.tickTimer);
+        state.tickTimer = null;
+      }
+    }
+
     function init() {
       renderProducts();
       selectProduct('bonds');
@@ -996,7 +1006,8 @@
         scheduleChartDraw();
       });
       window.addEventListener('resize', scheduleChartDraw);
-      window.setInterval(tick, 2400);
+      document.addEventListener('visibilitychange', syncTicker);
+      syncTicker();
     }
 
     init();
