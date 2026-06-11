@@ -167,14 +167,68 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 
   // enable menu collapse on escape keypress
   if (!expanded || isDesktop.matches) {
-    // collapse menu on escape press
     window.addEventListener('keydown', closeOnEscape);
-    // collapse menu on focus lost
     nav.addEventListener('focusout', closeOnFocusLost);
   } else {
     window.removeEventListener('keydown', closeOnEscape);
     nav.removeEventListener('focusout', closeOnFocusLost);
   }
+}
+
+/**
+ * Builds the mascot brand panel — the full-bleed face image that anchors
+ * the far-left edge of the nav bar on all screen sizes.
+ *
+ * Structure injected into .nav-brand (before .default-content-wrapper):
+ *
+ *   <div class="nav-brand-panel">
+ *     <img class="nav-brand-logo"
+ *          src="/icons/fluffyjaws-mascot.webp"
+ *          alt="FluffyJaws — dapper shark mascot"
+ *          width="220" height="220">
+ *   </div>
+ *
+ * CSS handles the full-bleed object-fit: cover treatment.
+ * The image lives at /icons/fluffyjaws-mascot.webp in the repo (codebus).
+ * Source: 220×220 webp — see blocks/header/README or nav/NOTES.md.
+ *
+ * @returns {HTMLElement} The brand panel element
+ */
+function buildBrandPanel() {
+  const panel = document.createElement('div');
+  panel.className = 'nav-brand-panel';
+
+  const img = document.createElement('img');
+  img.className = 'nav-brand-logo';
+  // Codebus path — commit /shared/fluffyjaws/nav/fluffyjaws-mascot-nav.webp
+  // to the repo as /icons/fluffyjaws-mascot.webp
+  img.src = '/icons/fluffyjaws-mascot.webp';
+  img.alt = 'FluffyJaws — dapper shark mascot';
+  // Intrinsic dimensions for layout stability (prevents CLS)
+  img.width = 220;
+  img.height = 220;
+  // Not meaningful content — the wordmark is the accessible brand name
+  img.setAttribute('aria-hidden', 'true');
+
+  panel.append(img);
+  return panel;
+}
+
+/**
+ * Attaches a passive scroll listener to the nav-wrapper that adds/removes
+ * the `is-scrolled` class. CSS uses this to deepen the bar's shadow and
+ * intensify the gold hairline.
+ *
+ * @param {Element} navWrapper The .nav-wrapper element
+ */
+function initScrollElevation(navWrapper) {
+  const THRESHOLD = 8; // px
+  const onScroll = () => {
+    navWrapper.classList.toggle('is-scrolled', window.scrollY > THRESHOLD);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  // Sync immediately (handles mid-page refresh / anchor navigation)
+  onScroll();
 }
 
 /**
@@ -205,6 +259,12 @@ export default async function decorate(block) {
     brandLink.className = '';
     const buttonContainer = brandLink.closest('.button-container');
     if (buttonContainer) buttonContainer.className = '';
+  }
+
+  // Inject the full-bleed mascot panel as the first child of .nav-brand,
+  // before the default-content-wrapper that holds the wordmark text.
+  if (navBrand) {
+    navBrand.prepend(buildBrandPanel());
   }
 
   const navSections = nav.querySelector('.nav-sections');
@@ -243,4 +303,7 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  // Scroll elevation: deepen shadow + brighten gold hairline on scroll
+  initScrollElevation(navWrapper);
 }
