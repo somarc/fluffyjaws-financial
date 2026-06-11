@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FluffyJaws Product Desk</title>
   <meta name="description" content="A fictional FluffyJaws Financial product desk for bonds, ETFs, and FluffyCoins.">
+  <link rel="stylesheet" href="/styles/styles.css">
   <style>
     :root {
       --paper: #fffdf8;
@@ -32,6 +33,13 @@
         radial-gradient(circle at 12% 0%, rgb(31 122 90 / 10%), transparent 28%),
         linear-gradient(180deg, #fffdf8, #f6fafb 68%, #eef4f8);
       color: var(--ink);
+      font-family: roboto, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    header {
+      background: var(--paper);
     }
 
     button,
@@ -39,8 +47,8 @@
 
     .app {
       display: grid;
-      grid-template-rows: auto auto minmax(0, 1fr) auto;
-      min-height: 100vh;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      min-height: calc(100vh - var(--nav-height, 64px));
     }
 
     .topbar {
@@ -116,9 +124,9 @@
 
     .hero-strip {
       display: grid;
-      grid-template-columns: minmax(260px, .55fr) minmax(0, 1fr);
-      gap: 18px;
-      padding: 20px 24px 12px;
+      grid-template-columns: minmax(250px, .42fr) minmax(0, 1fr);
+      gap: 14px;
+      padding: 14px 24px 10px;
     }
 
     .market-title {
@@ -129,13 +137,13 @@
 
     .market-title h1 {
       margin: 0;
-      font-size: clamp(26px, 3vw, 42px);
+      font-size: clamp(24px, 2.4vw, 34px);
       line-height: 1;
     }
 
     .last-price {
       color: var(--green);
-      font-size: 30px;
+      font-size: 26px;
       font-weight: 900;
     }
 
@@ -144,7 +152,7 @@
     .products {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
+      gap: 10px;
     }
 
     .product-card {
@@ -152,7 +160,7 @@
       gap: 8px;
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 14px;
+      padding: 11px 12px;
       background: var(--panel);
       box-shadow: var(--shadow);
       cursor: pointer;
@@ -171,7 +179,7 @@
     }
 
     .product-card strong {
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .product-card small {
@@ -180,8 +188,8 @@
 
     .workspace {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 248px;
-      grid-template-rows: minmax(620px, 1fr) 196px;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: minmax(660px, 1fr) 188px 164px;
       gap: 14px;
       min-height: 0;
       padding: 0 24px 18px;
@@ -299,9 +307,9 @@
 
     .side-rail {
       display: grid;
-      grid-template-rows: minmax(0, 1fr) minmax(0, .85fr);
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
       gap: 14px;
-      grid-row: 1;
+      min-height: 0;
     }
 
     .row,
@@ -362,7 +370,6 @@
     }
 
     .ticket {
-      grid-column: 1 / -1;
       display: grid;
       grid-template-rows: 46px minmax(0, 1fr);
     }
@@ -447,13 +454,11 @@
       box-shadow: 0 0 22px rgb(31 122 90 / 28%);
     }
 
-    @media (max-width: 1120px) {
+    @media (max-width: 760px) {
       body { overflow: auto; }
 
-      .topbar,
       .hero-strip {
         grid-template-columns: 1fr;
-        flex-wrap: wrap;
       }
 
       .products,
@@ -467,28 +472,20 @@
       }
 
       .side-rail {
-        grid-row: auto;
+        grid-template-columns: 1fr;
       }
     }
   </style>
-</head>
-<body>
-  <div class="app">
-    <header class="topbar">
-      <div class="brand"><span class="paw">🐾</span><span>FluffyJaws Financial</span></div>
-      <nav class="nav" aria-label="Product desk navigation">
-        <strong>Product Desk</strong>
-        <span>Bonds</span>
-        <span>ETFs</span>
-        <span>FluffyCoins</span>
-        <span>Compare</span>
-        <span>Risk Profiler</span>
-      </nav>
-      <input class="search" type="search" placeholder="Search products">
-      <button class="ghost" type="button">Demo Balance</button>
-      <button class="primary" type="button">Open Account</button>
-    </header>
+  <script type="module">
+    import { loadHeader } from '/scripts/aem.js';
 
+    document.body?.classList.add('appear');
+    loadHeader(document.querySelector('header'));
+  </script>
+</head>
+<body class="appear trader-page">
+  <header></header>
+  <div class="app">
     <section class="hero-strip" aria-label="Market summary">
       <div class="market-title">
         <h1 id="pairName">FluffyJaws Bonds / USD</h1>
